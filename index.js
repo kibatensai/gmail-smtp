@@ -2,18 +2,21 @@ const express = require('express')
 const nodemailer = require('nodemailer')
 const cors = require('cors')
 const app = express()
-const port = 3010
+const port = process.env.PORT || 3010
 
 app.use(cors())
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
+let smtp_login = process.env.SMTP_LOGIN || '---'
+let smtp_password = process.env.SMTP_PASSWORD || '---'
+
 // SMTP Transporter
 let transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-        user: "dave.p.nodejs@gmail.com",
-        pass: "nodejslddp5t4v"
+        user: smtp_login,
+        pass: smtp_password
     },
     tls: {
         rejectUnauthorized: false
@@ -61,5 +64,5 @@ app.post('/sendMessage', async (req, res) => {
   })
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+  console.log(`GMAIL-SMTP listening at http://localhost:${port}`)
 })
